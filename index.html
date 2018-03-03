@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <form id="myForm">
+        Nome: <input type="text" name="nome" id="nome" required>
+
+        <br>
+
+        Data de nascimento: <input type="date" name="dataNasc" id="dataNasc" required>
+
+        <br>
+
+        <button type="submit">
+            Submeter
+        </button>
+    </form>
+
+    <script>
+        var form = document.querySelector('#myForm');
+
+        form.addEventListener('submit', function onFormSubmit(evt) {
+            evt.preventDefault();
+
+            var nome = document.querySelector('#nome').value;
+
+            var dataNasc = document.querySelector('#dataNasc').valueAsDate;
+
+            var hoje = new Date();
+
+            var diff = hoje - dataNasc;
+
+            var diffAnos = Math.floor(diff / 1000 / 60 / 60 / 24 / 365.25);
+
+            // var mensagem = "Olá, " + nome + ", tens " + diffAnos + " anos!";
+            var mensagem = `Olá, ${nome}, tens ${diffAnos} anos!`;
+
+            console.log(nome, dataNasc, diffAnos);
+
+            // form.innerHTML += `<p>${mensagem}</p>`;
+            form.insertAdjacentHTML('beforeend', `<p>${mensagem}</p>`);
+        });
+    </script>
+</body>
+</html>
