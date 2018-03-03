@@ -6,40 +6,82 @@
 </head>
 <body>
     <form id="myForm">
+        <!-- 
+            O uso do 'required' dentro de um <form> faz com que o browser valide
+            a presença de valor no campo quando o formulário é submetido.
+
+            Outras validações podem ser usadas, como 'min', 'max', 'pattern', ou 'step'.
+            ('min', 'max' e 'step' são para campos como datas e números, 'pattern' é para texto (Regex))
+        -->
         Nome: <input type="text" name="nome" id="nome" required>
 
         <br>
 
+        <!--            
+            O tipo do campo (ex: 'email' ou 'date') também influencia as validações;
+            quando é 'email', o browser valida automaticamente se o email é válido ou não.
+        -->
         Data de nascimento: <input type="date" name="dataNasc" id="dataNasc" required>
 
         <br>
 
+        <!-- 
+            O tipo do botão deve ser sempre explícito,
+            by default um <button> tem o type de 'button', excepto
+            quando está dentro de um <form>, em que nesse caso toma o type de
+            'submit'.
+
+            Poupa-vos uma dor de cabeça se tiverem formulários com botões lá pelo meio ;)
+        -->
         <button type="submit">
             Submeter
         </button>
     </form>
 
     <script>
+        /**
+         * @type HTMLFormElement
+         */
         var form = document.querySelector('#myForm');
 
+        // Para que as validações funcionem, em vez de fazer um 
+        // 'click' no botão, faço um 'submit' no <form>.
+        // Isto faz com que o browser valide, e só se for válido, é que a 
+        // função é executada.
+        // Nota: É possível validar se um formulário é válido ao fazer uso 
+        // da função 'checkValidity()' do form, que retorna um booleano.
+        // Nota 2: O uso do 'addEventListener' é preferível em vez do
+        // 'onsubmit =', visto que assim podemos ter multiplos event listeners
+        // no mesmo elemento.
+        // Ver: https://stackoverflow.com/questions/6348494/addeventlistener-vs-onclick
         form.addEventListener('submit', function onFormSubmit(evt) {
             evt.preventDefault();
 
+            // Obter valores
             var nome = document.querySelector('#nome').value;
 
+            // 'valueAsDate' retorna uma data, 'valueAsNumber' retorna um número
+            // sem necessitar de fazer 'parseInt' ou 'parseFloat'.
             var dataNasc = document.querySelector('#dataNasc').valueAsDate;
 
             var hoje = new Date();
 
+            // A diferença entre 2 datas é o nº de milisegundos.
             var diff = hoje - dataNasc;
 
             var diffAnos = Math.floor(diff / 1000 / 60 / 60 / 24 / 365.25);
 
+            // Strings podem começar e acabar com acentos graves (`),
+            // e permitem colocar variáveis no meio.
             // var mensagem = "Olá, " + nome + ", tens " + diffAnos + " anos!";
             var mensagem = `Olá, ${nome}, tens ${diffAnos} anos!`;
 
             console.log(nome, dataNasc, diffAnos);
 
+            // É de evitar o uso de 'innerHTML += html' para concatenar HTML.
+            // Se for preciso fazer isso, é preferível fazer uso do 
+            // 'insertAdjacentHTML(posição, html)', por questões de desempenho
+            // e porque o 'innerHTML +=' destrói os elementos que estavam lá presentes.
             // form.innerHTML += `<p>${mensagem}</p>`;
             form.insertAdjacentHTML('beforeend', `<p>${mensagem}</p>`);
         });
